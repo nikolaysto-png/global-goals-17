@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The 17 Goals — A Living Atlas of the UN Sustainable Development Goals</title>
+<meta name="description" content="An interactive, fluid exploration of all 17 UN Sustainable Development Goals." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Animated background canvas -->
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+<!-- Custom cursor glow -->
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+<!-- Progress bar -->
+<div class="scroll-progress"><div class="scroll-progress__fill" id="scrollFill"></div></div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a class="nav__logo" href="#hero">
+    <span class="nav__logo-wheel" aria-hidden="true"></span>
+    <span>SDG&nbsp;<em>Atlas</em></span>
+  </a>
+  <div class="nav__links">
+    <a href="#wheel">The Wheel</a>
+    <a href="#grid">All 17 Goals</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#action">Take Action</a>
+  </div>
+  <button class="nav__cta" id="surpriseBtn" title="Jump to a random goal">🎲 Surprise me</button>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="hero">
+  <div class="hero__aurora" aria-hidden="true"></div>
+  <div class="hero__inner">
+    <p class="hero__kicker reveal">United Nations · 2015 Agenda · 2030 Deadline</p>
+    <h1 class="hero__title">
+      <span class="line-mask"><span class="line-inner">Seventeen goals.</span></span>
+      <span class="line-mask"><span class="line-inner gradient-text">One shared future.</span></span>
+    </h1>
+    <p class="hero__sub reveal">A living, interactive atlas of the Sustainable Development Goals —
+      the blueprint adopted by every UN Member State to end poverty, protect the planet
+      and ensure prosperity for all. <strong>Hover, tap, drag and explore.</strong></p>
+    <div class="hero__stats reveal">
+      <div class="hstat"><span class="hstat__num" data-count="17">0</span><span class="hstat__lbl">Global Goals</span></div>
+      <div class="hstat"><span class="hstat__num" data-count="169">0</span><span class="hstat__lbl">Targets</span></div>
+      <div class="hstat"><span class="hstat__num" data-count="193">0</span><span class="hstat__lbl">Member States</span></div>
+      <div class="hstat"><span class="hstat__num" data-count="2030">0</span><span class="hstat__lbl">Deadline</span></div>
+    </div>
+    <div class="hero__actions reveal">
+      <a class="btn btn--primary magnetic" href="#wheel">Explore the wheel ↓</a>
+      <a class="btn btn--ghost magnetic" href="#action">Take action</a>
+    </div>
+  </div>
+  <div class="hero__marquee" aria-hidden="true">
+    <div class="marquee__track" id="marqueeTrack"></div>
+  </div>
+  <div class="hero__scroll-hint" aria-hidden="true"><span></span></div>
+</header>
+
+<!-- WHEEL SECTION -->
+<section class="section wheel-section" id="wheel">
+  <div class="section__head">
+    <p class="section__kicker reveal">01 · The Big Picture</p>
+    <h2 class="reveal">The SDG Wheel</h2>
+    <p class="section__lead reveal">Every goal is interconnected — spin the wheel, hover a segment,
+      and watch how the colours of our shared agenda fit together.</p>
+  </div>
+  <div class="wheel-wrap reveal">
+    <svg id="sdgWheel" viewBox="0 0 520 520" role="img" aria-label="Interactive wheel of the 17 SDGs"></svg>
+    <div class="wheel-center">
+      <div class="wheel-center__num" id="wheelNum">17</div>
+      <div class="wheel-center__title" id="wheelTitle">Goals</div>
+      <div class="wheel-center__tag" id="wheelTag">Hover a segment</div>
+    </div>
+  </div>
+</section>
+
+<!-- GRID SECTION -->
+<section class="section grid-section" id="grid">
+  <div class="section__head">
+    <p class="section__kicker reveal">02 · Deep Dive</p>
+    <h2 class="reveal">All Seventeen Goals</h2>
+    <p class="section__lead reveal">Click any tile to open its story — targets, key data and why it matters.
+      Filter by theme, or search below.</p>
+  </div>
+
+  <div class="toolbar reveal">
+    <input type="search" id="searchInput" class="search" placeholder="Search goals… e.g. climate, water, equality" aria-label="Search goals"/>
+    <div class="chips" id="filterChips">
+      <button class="chip is-active" data-filter="all">All</button>
+      <button class="chip" data-filter="people">People</button>
+      <button class="chip" data-filter="planet">Planet</button>
+      <button class="chip" data-filter="prosperity">Prosperity</button>
+      <button class="chip" data-filter="peace">Peace</button>
+      <button class="chip" data-filter="partnership">Partnership</button>
+    </div>
+  </div>
+
+  <div class="goal-grid" id="goalGrid"><!-- tiles injected by JS --></div>
+  <p class="empty-note" id="emptyNote" hidden>No goals match that search. Try “ocean”, “health” or “energy”.</p>
+</section>
+
+<!-- TIMELINE SECTION -->
+<section class="section timeline-section" id="timeline">
+  <div class="section__head">
+    <p class="section__kicker reveal">03 · The Journey</p>
+    <h2 class="reveal">Road to 2030</h2>
+    <p class="section__lead reveal">Halfway there — and off track on most targets. Scroll through the milestones.</p>
+  </div>
+  <div class="timeline" id="timeline-track"><!-- injected --></div>
+</section>
+
+<!-- ACTION / QUIZ SECTION -->
+<section class="section action-section" id="action">
+  <div class="section__head">
+    <p class="section__kicker reveal">04 · You Belong Here</p>
+    <h2 class="reveal">Which Goal Needs <span class="gradient-text">You</span>?</h2>
+    <p class="section__lead reveal">Answer three quick questions and we'll match you with the cause closest to your heart.</p>
+  </div>
+
+  <div class="quiz card-glass reveal" id="quiz">
+    <div class="quiz__progress"><span id="quizBar"></span></div>
+    <div id="quizBody"><!-- injected --></div>
+  </div>
+
+  <div class="pledge reveal">
+    <div class="pledge__text">
+      <h3>Make a public pledge</h3>
+      <p>Small acts ripple. Join <strong><span id="pledgeCount">12,847</span></strong> people committed today.</p>
+    </div>
+    <button class="btn btn--primary magnetic" id="pledgeBtn">✋ I pledge to do my part</button>
+    <div class="confetti-host" id="confettiHost" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer__wave" aria-hidden="true"></div>
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <strong>SDG Atlas</strong>
+      <p>An unofficial, interactive tribute to the United Nations 2030 Agenda.<br/>Built with curiosity 💫</p>
+    </div>
+    <div class="footer__colors" id="footerColors" aria-hidden="true"></div>
+    <a class="footer__link" href="#hero">Back to top ↑</a>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__card" id="modalCard">
+    <button class="modal__close" data-close aria-label="Close">✕</button>
+    <div class="modal__accent" id="modalAccent"></div>
+    <div class="modal__body" id="modalBody"></div>
+  </div>
+</div>
+
+<script src="sdg-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
